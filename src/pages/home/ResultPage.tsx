@@ -12,6 +12,7 @@ import AppConfig from "@/configs/AppConfig";
 import Utils from "@/utils/Utils";
 import { Dialog } from "primereact/dialog";
 import { Message } from "primereact/message";
+import VoiceBot from "./VoiceBot";
 
 const CUSTOMER_KEYS: Array<keyof FaceSearchItem> = ['id', 'name'];
 const COLUMNS: Array<keyof OcrItem> = ['no', 'item', 'quantity', 'unit_price', 'total'];
@@ -203,7 +204,13 @@ const ResultPage = (): JSX.Element => {
     )
 
     return (
-        <div className="grid grid-cols-2 grid-rows-2 gap-5 h-full w-full pt-5">
+        <div className="grid grid-cols-2 grid-rows-2 gap-5 h-full w-full pt-5 relative">
+            <div className="absolute invisible">
+                {
+                    totalPrice !== 0 && 
+                    <VoiceBot text={`Tổng số tiền cần thanh toán là ${totalPrice} đồng.`}/>
+                }
+            </div>
             {
                 Array(3).fill(0).map((_, i) =>
                     <div

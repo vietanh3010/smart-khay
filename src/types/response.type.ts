@@ -1,6 +1,6 @@
 
 export type FaceSearchResponse = {
-    code: "200",
+    code: 200,
     data: FaceSearchItem,
 } | {
     code: string,
@@ -30,4 +30,11 @@ export type OcrResponse = {
             image_link: string,
         }
     ]
+}
+
+export type VoiceResponse = {
+    async: string,
+    error: number, // success = 0
+    message: string,
+    request_id: string,
 }
