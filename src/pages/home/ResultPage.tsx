@@ -71,7 +71,7 @@ const ResultPage = (): JSX.Element => {
                                     ${
                                         COLUMNS.map(column => 
                                             `<td style="border: 1px solid #dddddd; text-align: left; padding: 8px">
-                                                ${['quantity', 'unit_price', 'total'].includes(column) ? Utils.formatPrice(Number(item[column])) : item[column]}
+                                                ${['unit_price', 'total'].includes(column) ? Utils.formatPrice(Number(item[column])) : item[column]}
                                             </td>`
                                         ).join()
                                     }
