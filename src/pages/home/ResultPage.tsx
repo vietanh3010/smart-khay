@@ -16,6 +16,8 @@ import { Message } from "primereact/message";
 const CUSTOMER_KEYS: Array<keyof FaceSearchItem> = ['id', 'name'];
 const COLUMNS: Array<keyof OcrItem> = ['no', 'item', 'quantity', 'unit_price', 'total'];
 
+const DEFAULT_BALANCE = 500000;
+
 const ResultPage = (): JSX.Element => {
     const {
         screenshot,
@@ -26,9 +28,9 @@ const ResultPage = (): JSX.Element => {
         ocrResponse
     } = useOcrStore();
     const {T} = useCustomTranslation();
-    const { reset: resetStepStore, setPreviousStep, setFaceSearchResponse, setScreenshot } = useStepStore();
+    const { reset: resetStepStore, setPreviousStep, setFaceSearchResponse } = useStepStore();
     const { reset: resetFaceMatchStore } = useFaceMatchStore();
-    const { reset: resetOcrStore } = useOcrStore();
+    const { reset: resetOcrStore, setScreenshot } = useOcrStore();
     const [visible, setVisible] = useState<boolean>(false);
     const faceSearchItem = useMemo(() => {
         return faceSearchResponse?.data as FaceSearchItem
@@ -41,7 +43,7 @@ const ResultPage = (): JSX.Element => {
     const totalPrice = useMemo(() => {
         if(!ocrItem?.items) return 0;
         const total = ocrItem.items.reduce<number>((p,c) => p + Number(c.total), 0);
-        return Utils.formatPrice(total);
+        return total;
     }, [ocrItem?.items])
 
     const onPurchase = useCallback(async () => {
@@ -80,8 +82,12 @@ const ResultPage = (): JSX.Element => {
                             ).join()
                         }
                     </table>
-                    <span style="margin-top: 20px; font-size: 24px; width: 100%; display: flex; justify-content: end">${T('totals')}: ${totalPrice}</span>
-                    <span style="margin-top: 20px; font-size: 24px; width: 100%; display: flex; justify-content: end">${T('balance')}: ${Utils.formatPrice(20000)}</span>
+                    <span style="margin-top: 20px; font-size: 24px; width: 100%; display: flex; justify-content: end">
+                        ${T('totals')}: ${Utils.formatPrice(totalPrice)}
+                    </span>
+                    <span style="margin-top: 20px; font-size: 24px; width: 100%; display: flex; justify-content: end">
+                        ${T('balance')}: ${Utils.formatPrice(DEFAULT_BALANCE-totalPrice)}
+                    </span>
                 </div>
             `.replace(/^\s+|\s+$/g, ' ')
         })
@@ -127,7 +133,7 @@ const ResultPage = (): JSX.Element => {
                     <div
                         className="flex flex-col">
                         <span className="text-gray-8 font-medium text-sm">{T(`balance`)}</span>
-                        <span className="text-primary font-medium text-lg leading-4">{Utils.formatPrice(20000)}</span>
+                        <span className="text-primary font-medium text-lg leading-4">{Utils.formatPrice(DEFAULT_BALANCE)}</span>
                     </div>
                 </div>
             </div>
