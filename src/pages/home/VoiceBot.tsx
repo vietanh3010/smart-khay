@@ -1,6 +1,6 @@
 import useVoiceService from "@/service-hook/useVoice.service";
 import { useQuery } from "@tanstack/react-query";
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 
 type VoiceBotProps = {
     text: string,
@@ -11,20 +11,34 @@ const VoiceBot = ({
 }: VoiceBotProps) => {
 
     const { getAudio } = useVoiceService();
+    const [audioSrc, setAudioSrc] = useState<string>();
 
     const {data} = useQuery({
         queryFn: () => getAudio(text),
-        queryKey: [text]
+        queryKey: [text],
     })
     
+    useEffect(() => {
+        if(!data?.async) return;
+        setAudioSrc(data.async)
+    }, [data])
 
     return (
         <>
             {
-                data?.async && 
-                <audio autoPlay>
+                audioSrc && 
+                <audio 
+                    autoPlay
+                    onError={() => {
+                        setAudioSrc(undefined);
+                        setTimeout(() => {
+                            setAudioSrc(audioSrc)
+                        }, 1000)
+                    }}
+                    onEnded={() => setAudioSrc(undefined)}
+                    >
                     <source 
-                        src={data.async}
+                        src={audioSrc}
                         type="audio/ogg"/>
                 </audio>
             }
