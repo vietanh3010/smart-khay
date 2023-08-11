@@ -208,7 +208,7 @@ const ResultPage = (): JSX.Element => {
             <div className="absolute invisible">
                 {
                     totalPrice !== 0 && 
-                    <VoiceBot text={`Tổng số tiền cần thanh toán là ${totalPrice} đồng.`}/>
+                    <VoiceBot text={`Tổng số tiền cần thanh toán là ${totalPrice} đồng. Cảm ơn quý khách đã mua hàng với tiệm Mái Hiên.`}/>
                 }
             </div>
             {
